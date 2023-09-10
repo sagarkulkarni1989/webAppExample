@@ -1,24 +1,42 @@
 pipeline {
     agent any
-
-    parameters {
+	
+	 parameters {
         string(name: 'SERVER_NAME_PARAM', defaultValue: '', description: 'Enter the server name')
+		string(name: 'USER_NAME_PARAM', defaultValue: '', description: 'Enter the server name')
+		
     }
 
     stages {
-        stage('Get Server Name') {
+        stage('Git Checkout') {
             steps {
-                script {
-                    // Get the value of the SERVER_NAME_PARAM parameter
-                    def serverName = params.SERVER_NAME_PARAM
-                    echo "Server Name: ${serverName}"
-
-                    // Now, you can use 'serverName' as a variable in your pipeline
-                }
+                git 'https://github.com/sagarkulkarni1989/webAppExample.git'
             }
         }
-
-        // Add more stages as needed
+        
+        stage ('Build'){
+            
+            steps{
+                
+                sh "mvn package"
+             
+            }
+        }
+        
+        stage('Deploy'){
+            
+            steps{
+                sshagent(['tomcat2']) {
+                   
+        
+                  sh "scp -o StrictHostKeyChecking=no target/*.war $(USER_NAME_PARAM)@${SERVER_NAME_PARAM}:/opt/tomcat/webapps"
+   
+                    
+                    
+               
+                }
+                
+            }
+        }
     }
 }
-

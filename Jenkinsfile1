@@ -1,0 +1,24 @@
+pipeline {
+    agent any
+
+    parameters {
+        string(name: 'SERVER_NAME_PARAM', defaultValue: '', description: 'Enter the server name')
+    }
+
+    stages {
+        stage('Get Server Name') {
+            steps {
+                script {
+                    // Get the value of the SERVER_NAME_PARAM parameter
+                    def serverName = params.SERVER_NAME_PARAM
+                    echo "Server Name: ${serverName}"
+
+                    // Now, you can use 'serverName' as a variable in your pipeline
+                }
+            }
+        }
+
+        // Add more stages as needed
+    }
+}
+

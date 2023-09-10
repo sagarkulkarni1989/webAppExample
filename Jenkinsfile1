@@ -1,39 +1,27 @@
 pipeline {
     agent any
 	
-	 parameters {
-        string(name: 'SERVER_NAME_PARAM', defaultValue: '', description: 'Enter the server name')
-		string(name: 'USER_NAME_PARAM', defaultValue: '', description: 'Enter the server name')
+       parameters {
+         string(name: 'SERVER_NAME_PARAM', defaultValue: '', description: 'Enter the server name')
+	 string(name: 'USER_NAME_PARAM', defaultValue: '', description: 'Enter the server name')
 		
-    }
+       }
 
-    stages {
-        stage('Git Checkout') {
+       stages {
+          stage('Git Checkout') {
             steps {
                 git 'https://github.com/sagarkulkarni1989/webAppExample.git'
             }
         }
-        
         stage ('Build'){
-            
-            steps{
-                
-                sh "mvn package"
-             
+             steps{
+                  sh "mvn package"    
             }
         }
-        
-        stage('Deploy'){
-            
-            steps{
+         stage('Deploy'){
+             steps{
                 sshagent(['tomcat2']) {
-                   
-        
-                  sh "scp -o StrictHostKeyChecking=no target/*.war $(USER_NAME_PARAM)@${SERVER_NAME_PARAM}:/opt/tomcat/webapps"
-   
-                    
-                    
-               
+                   sh "scp -o StrictHostKeyChecking=no target/*.war $(USER_NAME_PARAM)@${SERVER_NAME_PARAM}:/opt/tomcat/webapps"
                 }
                 
             }

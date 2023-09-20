@@ -13,6 +13,7 @@ pipeline {
         }
         stage('Build') {
             steps {
+		
                 sh "mvn package"
             }
         }
@@ -27,5 +28,11 @@ pipeline {
                 }
             }
         }
+	stage('Hello') {
+            steps {
+                echo 'Hello World'
+            }
+        }
+	
     }
 }
